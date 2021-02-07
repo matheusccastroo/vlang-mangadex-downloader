@@ -41,8 +41,28 @@ fn main() {
 
 			manga_chapter_relation[manga_title][chapter] = &chapter_images_urls
 		}
-		println(manga_chapter_relation)
 	}
+
+	for manga_title, chapter_number in manga_chapter_relation {
+		dir_name := create_dir_name(manga_title)
+		if !os.exists(dir_name) {
+			os.mkdir(dir_name) ?
+		}
+		os.chdir(dir_name)
+		// create subfolders for each chapter
+		for chapter, images in chapter_number {
+			chapter_dir_name := create_dir_name(chapter)
+			if !os.exists(chapter_dir_name) {
+				os.mkdir(chapter_dir_name) ?
+			}
+			os.chdir(chapter_dir_name)
+			for i := 0; i < images.len; i++ {
+				http.download_file(images[i], i.str()) ?
+			}
+			os.chdir('..')
+		}
+	}
+
 }
 //TODO --> create folders and subfolders on the specified path
 fn decompose_input(input_string string, separator string) []string {
@@ -65,4 +85,20 @@ fn decompose_input(input_string string, separator string) []string {
 	}
 
 	return arguments
+}
+
+fn create_dir_name(manga_title string) string {
+	mut dir_name := []byte{}
+	for i := 0; i < manga_title.len; i++ {
+		current_char := manga_title[i]
+		if current_char == ' '[0] {
+			dir_name << '_'[0]
+			continue
+		}
+		if current_char == '-'[0] || current_char == '/'[0] {
+			continue
+			}
+		dir_name << current_char
+	}
+	return string(dir_name)
 }
