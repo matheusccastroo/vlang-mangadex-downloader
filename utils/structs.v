@@ -1,4 +1,4 @@
-module mgstructs
+module utils
 
 // Anonymous structs are not supported yet, so this is a workaround.
 // Yeah, for some reason I need to declare the field public where I use and where I declare it. No idea.
@@ -20,6 +20,7 @@ pub struct Data {
 pub struct Request {
 	code int
 	status string
+	message string
 	pub:
 		data Data
 }
