@@ -4,7 +4,17 @@ import os
 
 fn main() {
 	input_manga_ids := os.input("Enter manga ids separated by comma (,): ")
+	input_save_path := os.input("Enter the location where you want to save: ")
 	manga_ids := utils.decompose_input(input_manga_ids, ",")
+
+	save_path := utils.create_save_path(input_save_path)
+
+	if !os.exists(save_path) {
+		os.mkdir(save_path) or {
+			panic(err)
+		}
+	}
+	os.chdir(save_path)
 
 	mut manga_chapter_relation := map[string]map[string][]string{}
 

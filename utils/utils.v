@@ -2,6 +2,7 @@ module utils
 
 import net.http
 import json
+import os
 
 const (
 	mangadex_api_url_v2 = 'https://api.mangadex.org/v2/'
@@ -56,4 +57,18 @@ pub fn do_get_request(path string) ?Data {
 	}
 
 	return error(decoded_response.message)
+}
+
+pub fn create_save_path(path_origin string) string {
+	mut path := []byte{}
+
+	for letter in path_origin {
+		if letter  == '~'[0] {
+			path << os.home_dir().bytes()
+			continue
+		}
+		path << letter
+	}
+
+	return string(path)
 }
