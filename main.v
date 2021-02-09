@@ -28,7 +28,7 @@ fn main() {
 		
 		manga_title := manga_data.title
 		manga_chapter_relation[manga_title] = map[string][]string{}
-
+		println("Preparing data for $manga_title")
 		chapters_data := utils.do_get_request('manga/$manga_id/chapters') or {
 			println('Error fetching chapters data for $manga_title --> $err')
 			continue
@@ -74,12 +74,17 @@ fn main() {
 				os.mkdir(chapter_dir_name) ?
 			}
 			os.chdir(chapter_dir_name)
-			for i := 0; i < images.len; i++ {
+			loop_size := images.len - 1
+			for i := 0; i <= loop_size; i++ {
+				print("\r * Downloading $manga_title - $chapter: $i/$loop_size")
 				http.download_file(images[i], i.str()) ?
 			}
+			print('\n')
 			os.chdir('..')
 		}
 		os.chdir('..')
 	}
+
+	println("Done!")
 
 }
